@@ -1,0 +1,52 @@
+.gameboxes {
+    border: 2px solid;
+    height: 300px;
+    width: 300px;
+}
+
+.container{
+
+}
+
+.jumbotron{}
+
+#playernameinput{}
+
+#adduser{}
+
+#playername{}
+
+#playernumber{}
+
+#turnstatus{}
+
+.playeronegamebox{}
+
+.playertwogamebox{}
+
+#playeronename{
+
+}
+#playeronerock{}
+#playeronepaper{}
+#playeronescissors{}
+
+#playertwoname{}
+#playertworock{}
+#playertwopaper{}
+#playertwoscissors{}
+
+.winloss{}
+
+#playeronewincount{}
+#playeronelosscount{}
+#playertwowincount{}
+#playertwolosscount{}
+
+
+#middlemessage{}
+
+
+.chatbox{}
+
+.choicesrow{}

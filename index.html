@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Rock, Paper, Scissors with Friends!</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" 
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link rel="stylesheet" href="assets/css/style.css">
+        <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/3.5.3/firebase.js"></script>
+        
+    </head>
+
+    <body>
+
+        <div class="container">
+
+	    <br>
+
+            <div class="jumbotron">
+                <h1 class="text-center">Rock, Paper, Scissors!</h1>
+            </div>
+
+            <div class="row">
+                <div class="container namesubmission">
+                    <input type="text" id="playernameinput">
+                    <button type="submit" class="btn btn-default" id="adduser">Start</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container greetings">
+                    <h2>Hi <span id="playername"></span>! You are Player<span id="playernumber"></span></h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container yourturn">
+                    <h2>It's Your Turn!</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container waitingmessage">
+                    <h2>Waiting for<span id="otherplayername"></span>to choose.</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container toomanyplayers">
+                    <h2>The game is full, please try again later!</h2>
+                </div>
+            </div>
+            <div class="row">
+                
+                <div class="container col-md-4">
+                    <div class="gameboxes playeronegamebox">
+                        <div class="row">
+                            <div class="container">
+                                <div id="playeronename">
+                                    Placeholder
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row playeronechoicesrow">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="container">
+                                        <div id="playeronerock">
+                                            Rock
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="container">
+                                        <div id="playeronepaper">
+                                            Paper
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="container">
+                                        <div id="playeronescissors">
+                                            Scissors
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="container">
+                                <div class="winloss">Wins: <span id="playeronewincount"></span> Losses: 
+                                <span id="playeronelosscount"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+                <div class="container col-md-4">
+                    <div class="gameboxes">
+                        <div class="row"> 
+                            <div class="container">
+                                <span id="middlemessage"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    
+                <div class="container col-md-4"> 
+                    <div class="gameboxes playertwogamebox">
+                        <div class="row">
+                                <div class="container">
+                                    <div id="playertwoname">
+                                        Placeholder
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row playertwochoicesrow">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="container">
+                                        <div id="playertworock">
+                                            Rock
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="container">
+                                        <div id="playertwopaper">
+                                            Paper
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="container">
+                                        <div id="playertwoscissors">
+                                            Scissors
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="container">
+                                <div class="winloss">Wins: <span id="playertwowincount"></span> Losses: 
+                                <span id="playertwolosscount"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="row">
+                <div class="chatbox col-md-12">
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+        </div>
+    </body>
+    <script src="assets/javascript/scratchcanvas.js"></script>
+</html>
