@@ -134,8 +134,6 @@ playerListOneName.on("value", function(snap) {
         if (snap.exists() === false){
             $("#playeronename").html("");
             $("#waitingforplayerone").show();
-            // playerOneTurn = false;
-            // playerTwoTurn = false;
             $(".playeronechoicesrow").hide();
             
         }
@@ -153,8 +151,6 @@ playerListTwoName.on("value", function(snap) {
         if (snap.exists() === false) {
             $("#playertwoname").html("");
             $("#waitingforplayertwo").show();
-            // playerOneTurn = false;
-            // playerlTwoTurn = false;
             $(".playeronechoicesrow").hide();
             
     
@@ -299,18 +295,22 @@ $(document).on("click", "#adduser", function(){
         startPlayerOne();
         playerOneTurn = true;
         database.ref("/players/1").onDisconnect().remove();
+        database.ref("/chatLog").onDisconnect().remove();
         return;
     }
 
     if (playerOneName != null && playerTwoName === null) {
         startPlayerTwo();
+        $(".waitingmessage").show();
         database.ref("/players/2").onDisconnect().remove();
+        database.ref("/chatLog").onDisconnect().remove();
         return;
     }
     if (playerOneName === null && playerTwoName != null) {
         startPlayerOneWithExisting();
         playerOneTurn = true;
         database.ref("/players/1").onDisconnect().remove();
+        database.ref("/chatLog").onDisconnect().remove();
         return;
     }
 });
@@ -450,7 +450,10 @@ $(document).on("click", "#playeronerock", function(){
     });
     $("#playeronechoice").html(playerOneChoice);
     $("#playeronechoice").show();
-    $(".playeronechoicesrow").hide(); 
+    $(".playeronechoicesrow").hide();
+    $(".yourturn").hide();
+    $(".waitingmessage").show();
+     
 });
 
 $(document).on("click", "#playeronepaper", function(){
@@ -463,7 +466,9 @@ $(document).on("click", "#playeronepaper", function(){
     });
     $("#playeronechoice").html(playerOneChoice);
     $("#playeronechoice").show();
-    $(".playeronechoicesrow").hide(); 
+    $(".playeronechoicesrow").hide();
+    $(".yourturn").hide();
+    $(".waitingmessage").show();
 });
 
 $(document).on("click", "#playeronescissors", function(){
@@ -477,6 +482,8 @@ $(document).on("click", "#playeronescissors", function(){
     $("#playeronechoice").html(playerOneChoice);
     $("#playeronechoice").show();
     $(".playeronechoicesrow").hide();
+    $(".yourturn").hide();
+    $(".waitingmessage").show();
     
 });
 
@@ -491,6 +498,8 @@ $(document).on("click", "#playertworock", function(){
     $("#playertwochoice").html(playerTwoChoice);
     $("#playertwochoice").show();
     $(".playertwochoicesrow").hide();
+    $(".yourturn").hide();
+   
     
 });
 
@@ -505,6 +514,8 @@ $(document).on("click", "#playertwopaper", function(){
     $("#playertwochoice").html(playerTwoChoice);
     $("#playertwochoice").show();
     $(".playertwochoicesrow").hide();
+    $(".yourturn").hide();
+    
     
     
 });
@@ -520,15 +531,14 @@ $(document).on("click", "#playertwoscissors", function(){
     $("#playertwochoice").html(playerTwoChoice);
     $("#playertwochoice").show();
     $(".playertwochoicesrow").hide();
+    $(".yourturn").hide();
+    
     
     
 });
 
 function evaluateChoices() {
-    // playerOneChoice = database.ref("/players/1/Choice").val();
-    // playerTwoChoice = database.ref("/players/2/Choice").val();
-    console.log(playerOneChoice);
-    console.log(playerTwoChoice);
+   
     if (playerOneChoice === "Rock" && playerTwoChoice === "Rock") {
         tieGame();
         
@@ -578,6 +588,8 @@ function evaluateChoices() {
 playerListOneChoice.on("value", function(snap){
     if (snap.exists() && playerOneTurn === false){          //player 2 sees this only cause of joining makes playerTwoTurn = false
         $(".playertwochoicesrow").show();
+        $(".yourturn").show();
+        $(".waitingmessage").hide();
         playerOneChoice = snap.val();
         $("#playeronechoice").hide();
         $("#playeronechoice").html(playerOneChoice);                          
@@ -589,6 +601,7 @@ playerListTwoChoice.on("value", function(snap){
     if (snap.exists()) {
         playerTwoChoice = snap.val();
         $("#playertwochoice").html(playerTwoChoice);
+        $(".waitingmessage").hide();
         evaluateChoices();
         
     }
@@ -599,7 +612,50 @@ playerList.on("value", function(snap) {
     
     if (snap.numChildren() === 2 && playerOneTurn === true){            //Only player 1 view
     $(".playeronechoicesrow").show();
+    $(".yourturn").show();
     playerTwoTurn = true;
     
     }
     });
+
+
+//Step One: Steal Bill's chatbox, Step Two: Take all the Glory, Step 3: Study it all later
+        database.ref("/chatLog").on("child_added", function(childSnapshot){
+            // Console.log the initial "snapshot" value (the object itself)
+            console.log("message added to chat log");
+            //update the chat window by adding the latest chat
+            var latestMessage = $("<p>");
+            latestMessage.addClass("chat-text");
+            latestMessage.text(childSnapshot.val().message);
+            $("#chat-display").append(latestMessage);
+            //scroll the chat log to show newest chat
+            var c = $("#chat-display");
+            c.scrollTop(c.prop("scrollHeight"));
+        }, function(errorObject){
+            alert("firebase encountered an error");
+        });
+
+        $(document).on("click","#chat-form-btn", function(){
+            //Fix Later
+            // if (playerOneName === null && playerTwoName === null){
+            //     var newMessage = ("New Player:" + $("#chat-form-input").val().trim());
+            // }
+            // if (playerOneName != null && playerTwoName === null) {
+            //     var newMessage = ("Player 1:" + $("#chat-form-input").val().trim());
+            // }
+            // if (playerOneName === null && playerTwoName != null) {
+            //     var newMessage = ("Player 2:" + $("#chat-form-input").val().trim());
+            // }
+           
+           var newMessage = ("Player: " + $("#chat-form-input").val().trim());
+            
+            //post the chat to the database
+            database.ref("/chatLog").push({
+                message: newMessage,
+                dateAdded: firebase.database.ServerValue.TIMESTAMP
+            });
+            //clear out the value of the form so their chat input is refreshed.
+            $("#chat-form-input").val("");
+            //return false so it doesnt reload page
+            return false;
+        });
