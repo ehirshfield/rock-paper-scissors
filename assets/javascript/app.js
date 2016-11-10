@@ -65,25 +65,17 @@ isConnected.on("value", function(snap) {
 
 
 
-playerList.on("value", function(snap) {
-
-       
-        if (snap.numChildren() === 2 && playerOneTurn === true){
-        $(".playeronechoicesrow").show();
-        playerTwoTurn = true;
-    }
-});
 
 database.ref().once("value", function(snap) {
 
-      if (snap.child("players/2").exists() === false && snap.child("players/1").exists() === false && snap.child("playerConnection").numChildren() === 1){
+      if (snap.child("players/2").exists() === false && snap.child("players/1").exists() === false && snap.child("playerConnection").numChildren() < 2){
         database.ref("/players/1").set({
                 Name: null,
                 Wins: null,
                 Losses: null
             });
             playerOneName = null;
-            database.ref("/players/1").onDisconnect().remove();
+            // database.ref("/players/1").onDisconnect().remove();
             return;
         }
 
@@ -94,7 +86,7 @@ database.ref().once("value", function(snap) {
                 Losses: null
             });
             playerOneName = null;
-            database.ref("/players/2").onDisconnect().remove();
+            // database.ref("/players/2").onDisconnect().remove();
             return;
         }
 
@@ -107,7 +99,7 @@ database.ref().once("value", function(snap) {
             });
             playerOneName = "Placeholder";
             playerTwoName = null;
-            database.ref("/players/2").onDisconnect().remove();
+            // database.ref("/players/2").onDisconnect().remove();
             return;
         }
     
@@ -119,7 +111,7 @@ database.ref().once("value", function(snap) {
             });
             playerOneName = null;
             playerTwoName = "Placeholder";
-            database.ref("/players/1").onDisconnect().remove();
+            // database.ref("/players/1").onDisconnect().remove();
             return;
         }
 
@@ -142,15 +134,11 @@ playerListOneName.on("value", function(snap) {
         if (snap.exists() === false){
             $("#playeronename").html("");
             $("#waitingforplayerone").show();
-            playerOneTurn = false;
+            // playerOneTurn = false;
+            // playerTwoTurn = false;
             $(".playeronechoicesrow").hide();
-            console.log(playerOneTurn);
+            
         }
-        
-        // if (playerOneTurn === true){
-        // $(".playeronechoicesrow").show();
-        
-        //  }
 
 
 });
@@ -165,17 +153,13 @@ playerListTwoName.on("value", function(snap) {
         if (snap.exists() === false) {
             $("#playertwoname").html("");
             $("#waitingforplayertwo").show();
-            playerOneTurn = false;
+            // playerOneTurn = false;
+            // playerlTwoTurn = false;
             $(".playeronechoicesrow").hide();
-            console.log(playerOneTurn);
+            
     
         }
-        // if (playerOneTurn === true){
-        // $(".playeronechoicesrow").show();
-        
-        
-        //  }
-
+     
 });
 
 playerListOneWins.on("value", function(snap){
@@ -252,7 +236,7 @@ function startPlayerOne() {
     $("#playeronelosscount").html(playerOneLossCount);
     $(".playeronescore").show();
 
-    // playerOneTurn = true;
+   
 }
 
 function startPlayerTwo() {
@@ -302,7 +286,7 @@ function startPlayerOneWithExisting() {
     $("#playeronelosscount").html(playerOneLossCount);
     $(".playeronescore").show();
 
-    // playerOneTurn = true;
+    
 }
 
 
@@ -311,19 +295,22 @@ function startPlayerOneWithExisting() {
 $(document).on("click", "#adduser", function(){
 
     if (playerOneName === null && playerTwoName === null){
+        
         startPlayerOne();
         playerOneTurn = true;
+        database.ref("/players/1").onDisconnect().remove();
         return;
     }
 
     if (playerOneName != null && playerTwoName === null) {
         startPlayerTwo();
-        
+        database.ref("/players/2").onDisconnect().remove();
         return;
     }
     if (playerOneName === null && playerTwoName != null) {
         startPlayerOneWithExisting();
         playerOneTurn = true;
+        database.ref("/players/1").onDisconnect().remove();
         return;
     }
 });
@@ -331,11 +318,18 @@ $(document).on("click", "#adduser", function(){
 
 function playerOneWin(){
     playerOneWinCount++;
-    database.ref("/players/1").set({
+    database.ref("/players/2").set({
+        Name: playerTwoName,
+        Wins: playerTwoWinCount,
+        Losses: playerTwoLossCount,
+        Choice: null
+        
+    });
+     database.ref("/players/1").set({
         Name: playerOneName,
         Wins: playerOneWinCount,
         Losses: playerOneLossCount,
-        Choice: playerOneChoice
+        Choice: null
     });
     $("#middlemessage").html(playerOneName + " Wins!");
     $("#middlemessage").show();
@@ -356,7 +350,14 @@ function playerTwoWin(){
         Name: playerTwoName,
         Wins: playerTwoWinCount,
         Losses: playerTwoLossCount,
-        Choice: playerTwoChoice
+        Choice: null
+        
+    });
+     database.ref("/players/1").set({
+        Name: playerOneName,
+        Wins: playerOneWinCount,
+        Losses: playerOneLossCount,
+        Choice: null
     });
     $("#middlemessage").html(playerTwoName + " Wins!");
     $("#middlemessage").show();
@@ -369,15 +370,24 @@ function playerTwoWin(){
     $("#playeronechoice").hide();},3000);
     setTimeout(function hidePlayerTwoChoice() {
     $("#playertwochoice").hide();},3000);
+
+    playerTwoTurn = false;
 }
 
 function playerOneLoss(){
     playerOneLossCount++;
-    database.ref("/players/1").set({
+    database.ref("/players/2").set({
+        Name: playerTwoName,
+        Wins: playerTwoWinCount,
+        Losses: playerTwoLossCount,
+        Choice: null
+        
+    });
+     database.ref("/players/1").set({
         Name: playerOneName,
         Wins: playerOneWinCount,
         Losses: playerOneLossCount,
-        Choice: playerOneChoice
+        Choice: null
     });
 }
 
@@ -387,8 +397,16 @@ function playerTwoLoss(){
         Name: playerTwoName,
         Wins: playerTwoWinCount,
         Losses: playerTwoLossCount,
-        Choice: playerTwoChoice
+        Choice: null
+        
     });
+     database.ref("/players/1").set({
+        Name: playerOneName,
+        Wins: playerOneWinCount,
+        Losses: playerOneLossCount,
+        Choice: null
+    });
+    playerTwoTurn = false;
 }
 
 function tieGame() {
@@ -399,8 +417,24 @@ function tieGame() {
     setTimeout(function hidePlayerTwoChoice() {
     $("#playertwochoice").hide();},3000);
     $("#middlemessage").html("Tie Game!");
+    $("#middlemessage").show();
     setTimeout(function hideMiddleMessage() {
     $("#middlemessage").hide();},3000);
+    playerTwoTurn = false;
+
+     database.ref("/players/2").set({
+        Name: playerTwoName,
+        Wins: playerTwoWinCount,
+        Losses: playerTwoLossCount,
+        Choice: null
+        
+    });
+     database.ref("/players/1").set({
+        Name: playerOneName,
+        Wins: playerOneWinCount,
+        Losses: playerOneLossCount,
+        Choice: null
+    });
 }
 
 
@@ -472,6 +506,7 @@ $(document).on("click", "#playertwopaper", function(){
     $("#playertwochoice").show();
     $(".playertwochoicesrow").hide();
     
+    
 });
 
 $(document).on("click", "#playertwoscissors", function(){
@@ -486,10 +521,14 @@ $(document).on("click", "#playertwoscissors", function(){
     $("#playertwochoice").show();
     $(".playertwochoicesrow").hide();
     
+    
 });
 
 function evaluateChoices() {
-   
+    // playerOneChoice = database.ref("/players/1/Choice").val();
+    // playerTwoChoice = database.ref("/players/2/Choice").val();
+    console.log(playerOneChoice);
+    console.log(playerTwoChoice);
     if (playerOneChoice === "Rock" && playerTwoChoice === "Rock") {
         tieGame();
         
@@ -537,16 +576,30 @@ function evaluateChoices() {
 
 
 playerListOneChoice.on("value", function(snap){
-    if (snap.exists() && playerTwoTurn === false){
+    if (snap.exists() && playerOneTurn === false){          //player 2 sees this only cause of joining makes playerTwoTurn = false
         $(".playertwochoicesrow").show();
-        playerOneChoice = snap;
+        playerOneChoice = snap.val();
+        $("#playeronechoice").hide();
+        $("#playeronechoice").html(playerOneChoice);                          
     }
 
 });
 
 playerListTwoChoice.on("value", function(snap){
-    if (snap.exists()){
-        playerTwoChoice = snap;
+    if (snap.exists()) {
+        playerTwoChoice = snap.val();
+        $("#playertwochoice").html(playerTwoChoice);
         evaluateChoices();
+        
+    }
+    });
+
+playerList.on("value", function(snap) {
+
+    
+    if (snap.numChildren() === 2 && playerOneTurn === true){            //Only player 1 view
+    $(".playeronechoicesrow").show();
+    playerTwoTurn = true;
+    
     }
     });
