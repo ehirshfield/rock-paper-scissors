@@ -68,53 +68,6 @@ isConnected.on("value", function(snap) {
 
 database.ref().once("value", function(snap) {
 
-      if (snap.child("players/2").exists() === false && snap.child("players/1").exists() === false && snap.child("playerConnection").numChildren() < 2){
-        database.ref("/players/1").set({
-                Name: null,
-                Wins: null,
-                Losses: null
-            });
-            playerOneName = null;
-            // database.ref("/players/1").onDisconnect().remove();
-            return;
-        }
-
-        if (snap.child("players/2").exists() === false && snap.child("players/1").exists() === false && snap.child("playerConnection").numChildren() === 2){
-        database.ref("/players/2").set({
-                Name: null,
-                Wins: null,
-                Losses: null
-            });
-            playerOneName = null;
-            // database.ref("/players/2").onDisconnect().remove();
-            return;
-        }
-
-        
-        if (snap.child("players/2").exists() === false && snap.child("players/1").exists() === true){
-        database.ref("/players/2").set({
-                Name: null,
-                Wins: null,
-                Losses: null
-            });
-            playerOneName = "Placeholder";
-            playerTwoName = null;
-            // database.ref("/players/2").onDisconnect().remove();
-            return;
-        }
-    
-    if (snap.child("players/2").exists() === true && snap.child("players/1").exists() === false){
-        database.ref("/players/1").set({
-                Name: null,
-                Wins: null,
-                Losses: null
-            });
-            playerOneName = null;
-            playerTwoName = "Placeholder";
-            // database.ref("/players/1").onDisconnect().remove();
-            return;
-        }
-
 
         if (snap.child("players/2").exists() === true && snap.child("players/1").exists() === true){
             $(".toomanyplayers").show();
@@ -309,6 +262,7 @@ $(document).on("click", "#adduser", function(){
     if (playerOneName === null && playerTwoName != null) {
         startPlayerOneWithExisting();
         playerOneTurn = true;
+        $(".playeronechoicesrow").show();
         database.ref("/players/1").onDisconnect().remove();
         database.ref("/chatLog").onDisconnect().remove();
         return;
