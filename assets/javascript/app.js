@@ -1,3 +1,4 @@
+//Initiate firebase
 var config = {
     apiKey: "AIzaSyCzMTmCouyGEJed9SC1SRTELqOhazetRx4",
     authDomain: "firstdatabase-eca5b.firebaseapp.com",
@@ -41,6 +42,8 @@ var playerChoices = ["Rock", "Paper", "Scissors"];
 var playerOneChoice = null;
 var playerTwoChoice = null;
 
+
+//Hide the necessary pieces on loading the page
 $(document).ready(function(){
      $(".greetings").hide();
      $(".yourturn").hide();
@@ -52,6 +55,7 @@ $(document).ready(function(){
      $(".playertwochoicesrow").hide();
 });
 
+//player connects push to player base, if they disconnect, then delete from firebase
 isConnected.on("value", function(snap) {
 
 	if(snap.val()) {
@@ -65,7 +69,7 @@ isConnected.on("value", function(snap) {
 
 
 
-
+//Third player tries to join
 database.ref().once("value", function(snap) {
 
 
@@ -76,6 +80,7 @@ database.ref().once("value", function(snap) {
         }
 
 });
+
 
 playerListOneName.on("value", function(snap) {
         if (snap.exists()){
